@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zashed</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <section class="firstLook">
+        <h1>Zashed</h1>
+    </section>  
+
+    <nav>
+        <p>Zashed</p>
+        <button class="login-button" onclick="Log()">Log In</button>
+        <button class="play-now-button" onclick="Log()">Play Now</button>
+    </nav>
+
+    <section>
+        <div class="container reveal">
+            <div class="cards">
+                <div class="text-card">
+                    <h2>Welcome to ZASHED!</h2>
+                    <p>Welcome to Zashed, the ultimate math speedrun game where quick thinking and numerical agility are your greatest assets! In Zashed, you'll face a continuous stream of diverse math challenges (gr12) all designed to test your reflexes and mathematical prowess.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container reveal2">
+            <h2>Guide on how to play</h2>
+            <div class="cards2">
+                <div class="text-card2">
+                    <h3>LOG IN TO PLAY</h3>
+                    <p>You firstly need to log in before you are able to play the game, so that you can keep track of your own progress.</p>
+                </div>
+                <div class="text-card2">
+                    <h3>OPTIONS</h3>
+                    <p>You will be presented with 2 different options after you log in, "simple" and "advanced"(has word problems).</p>
+                </div>
+                <div class="text-card2">
+                    <h3>WHITEBOARD</h3>
+                    <p>Upon entering the questions, you can press the &#9650; to get a whiteboard, which you can write on and &#9660; to go back to the answer and submit</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--links for socials || doesnt work, only refreshes page for now-->
+    <section>
+        <div class="container">
+            <h2>Feedback and Social Links</h2>
+            <div class="social-links">
+                <a href="#" target="_blank" class="social-icon">Facebook</a>
+                <a href="#" target="_blank" class="social-icon">Twitter</a>
+                <a href="#" target="_blank" class="social-icon">Instagram</a>
+            </div>
+            <button onclick="feedback()">Feedback</button>
+        </div>
+    </section>
+   
+    <script>
+        window.addEventListener('scroll', reveal);//looks for when the "scroll" button is clicked on your mouse
+        window.addEventListener('scroll', reveal2);//looks for when the "scroll" button is clicked on your mouse
+        
+        //when its clicked and scrolled far down enough, it shows the elements
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals[i].getBoundingClientRect().top;
+                var revealpoint = 150;
+                if (revealtop < windowheight - revealpoint) {
+                    reveals[i].classList.add('active');
+                }
+                else {
+                    reveals[i].classList.remove('active');
+                }
+            }
+        }
+        //when its clicked and scrolled far down enough, it shows the elements
+        function reveal2() {
+            var reveals2 = document.querySelectorAll('.reveal2');
+            for (var i = 0; i < reveals2.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals2[i].getBoundingClientRect().top;
+                var revealpoint = 150;
+                if (revealtop < windowheight - revealpoint) {
+                    reveals2[i].classList.add('active');
+                }
+                else {
+                    reveals2[i].classList.remove('active');
+                }
+            }
+        }
+
+        function Log(){
+            window.location.href = 'logsign.html';
+        }
+
+        function feedback(){
+            window.location.href = 'feedback.html';
+        }
+    </script>
+</body>
+</html>

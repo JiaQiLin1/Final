@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word</title>
+    <link rel="stylesheet" href="css/word.css">
+</head>
+<body>
+    <nav>
+        <div class="logo-container">
+            <a href="main.html">
+                <p>Zashed</p>
+            </a>
+        </div>
+        <div class="button-container">
+            <button id="toggleButton" onclick="toggleWhiteboard()">&#8592;  &#8594;</button>
+            <button id="clearBoardButton" onclick="clearBoard()">Clear Board</button>
+        </div>
+    </nav>
+    
+    <div class="wrapper">
+        <div id="question2"></div>
+        <input id="ans2" class="input-field"></input>
+        <h4 id="RW2"></h4>
+        <button onclick="calculate2()" class="submit2" id="submit2">Calculate!</button>
+        <div id="result2"></div>
+        <div id="score2">Score: 0/5</div>
+        <div id="timeElapsed2">Time: 0 seconds</div>
+        <p id="ansed2"></p>
+        <button id="next2" onclick="generateQuestion2()" hidden class="next2">Next Question</button>
+    </div>
+
+    <canvas id="whiteboard" width="800" height="600"></canvas>
+    
+    <script>
+        let x1, x2;//random values
+        let ran2;
+        let score2 = 0;
+        let attempts2 = 0;
+        let startTime2;
+        let endTime2;
+        let isHid99 = document.getElementById('next2');//for hidding elements
+        let isHid98 = document.getElementById('ans2');
+        let isHid97 = document.getElementById('submit2');
+        let q2; 
+        //is the page running?
+        document.addEventListener("DOMContentLoaded", function () {
+            generateQuestion2();
+            startTime2 = new Date();
+            updateElapsedTime2();
+        });
+
+        function calculate2() {
+            let userInput = parseFloat(document.getElementById("ans2").value);
+
+            if (isNaN(userInput)) {
+                alert('Please enter a valid number');
+                document.getElementById('ans2').value = '';
+            } 
+            else if (userInput === x1 - x2 || userInput === x1 + x2 || userInput === q2[ran2][2])  {//check 3 part of array
+                document.getElementById('RW2').innerHTML = "Correct";
+                document.getElementById('RW2').style.color = "green";
+                score2++;
+                attempts2++;
+                document.getElementById('score2').innerHTML = `Score: ${score2}/5`;
+                document.getElementById("ansed2").innerHTML = q2[ran2][1];//put 2 part of array
+                isHid99.removeAttribute('hidden');
+                isHid98.setAttribute("hidden", "hidden");
+                isHid97.setAttribute("hidden", "hidden");
+            } 
+            else {
+                document.getElementById('RW2').innerHTML = "Wrong";
+                document.getElementById('RW2').style.color = "red";
+                document.getElementById('score2').innerHTML = `Score: ${score2}/5`;
+                attempts2++;
+                document.getElementById("ansed2").innerHTML = q2[ran2][1];//put 2 part of array
+                isHid99.removeAttribute('hidden');
+                isHid98.setAttribute("hidden", "hidden");
+                isHid97.setAttribute("hidden", "hidden");
+            }   
+            if(attempts2 === 5){//set to 5 as not many questions || a quick bug here (found after presentation), when attepmts2 gets to 5, it doesnt force me back to main menu or stop, it just continues, it works for quick but not this
+                endTime2 = new Date();
+                let timeTaken2 = (endTime2 - startTime2) / 1000;//for sec
+
+                alert(`Quiz completed! You got ${score2} out of 10 correct. Time taken: ${timeTaken2} seconds.`);
+                document.getElementById('score2').innerHTML = `Score: ${score2}`;
+                saveToLocalStorage(score2, timeTaken2);
+                window.location.href = 'main.html';
+            }         
+        }
+
+        function generateQuestion2() {
+            x1 = Math.floor(Math.random() * 10) + 1;//random 1-10
+            x2 = Math.floor(Math.random() * 10) + 1; 
+            ran2 = Math.floor(Math.random() * 6);
+            let aa = x1 - x2;
+            let bb = x1 + x2;
+            q2 = [
+                [`If john has ${x1} dollars, and  gives ${x2} to a friend, how much does he have left?`, `its ${x1} - ${x2} = ${aa}`, 1000000],
+                [`If bob is ${x1}m above the ground and drops ${x2}m down, what is his height? (assume water, can be below the ground)`, `${x1} - ${x2} = ${aa}m`, 10000000],
+                [`If Bob is ${x1}m above the ground and moves ${x2}m more up, what is his height?`, `${x1} + ${x2} = ${bb}`, 100000000],
+                ['If a car is worth half of its original value 4 years after it is newly purchased, then how long do you have to wait for it to be 1/3 of its original price? (2 decimal places)', '  ', 6.34],
+                ['Bob is 3 seats ahead of John on the ferris wheel. Bobs height relative to the ground over time can be modelled by h(t) = -17cos(&#960;/17 (t + 15)) + 18. Determine the number of seats on this ferris wheel', 'Period = 150, 150/5 = 30', 30 ],
+                ['The fundy tides are represented by s(t) = -3.5cos (2&#960;/13 (t - 7.9)) + 5.5, what time does the low tide occur before 12?(1 decimal place, no acual time)', ' ', 7.9]
+            ];
+            let item = q2[ran2];
+            document.getElementById("question2").innerHTML = `${item[0]}`;
+            document.getElementById("ans2").value = '';
+            document.getElementById("ansed2").innerHTML = '';
+            document.getElementById('RW2').innerHTML ='';
+            isHid99.setAttribute("hidden", "hidden");
+            isHid98.removeAttribute("hidden");
+            isHid97.removeAttribute("hidden");
+        }
+
+        function updateElapsedTime2() {
+            setInterval(function () {
+                if (startTime2) {
+                    let currentTime2 = new Date();
+                    let elapsedSeconds2 = Math.floor((currentTime2 - startTime2) / 1000);//secs
+                    document.getElementById('timeElapsed2').innerHTML = `Time: ${elapsedSeconds2} seconds`;
+                }
+            }, 1000);
+        }
+    </script>
+    
+    <script>
+        //create a whiteboard
+        const canvas = document.getElementById('whiteboard');
+        const ctx = canvas.getContext('2d');
+    
+        let drawing = false;
+    
+        function startPosition(e) {//start?
+            drawing = true;
+            draw(e);
+        }
+    
+        function endPosition() {//done?
+            drawing = false;
+            ctx.beginPath();
+        }
+        //mouse clicked?
+        function draw(e) {
+            if (!drawing) return;
+            //set size and color
+            ctx.lineWidth = 5;  
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000';
+            //if clicked
+            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        }
+    
+        canvas.addEventListener('mousedown', startPosition);//where mouse
+        canvas.addEventListener('mouseup', endPosition);//where mouse
+        canvas.addEventListener('mousemove', draw);//where mouse
+        
+
+        //animations
+        function toggleWhiteboard() {
+            const wrapper = document.querySelector('.wrapper');
+            const whiteboard = document.getElementById('whiteboard');
+
+            if (wrapper.style.marginLeft === '0px') {//moves left
+                wrapper.style.marginLeft = 'calc(100% + 1000px)';
+                whiteboard.style.left = '350px'; 
+                whiteboard.style.display = 'block';
+            } 
+            else {
+                wrapper.style.marginLeft = '0px';//pop
+                whiteboard.style.left = 'calc(100% - 100px)';
+                whiteboard.style.display = 'none';
+            }
+        }
+        //remove ink
+        function clearBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>    
+</body>
+</html>

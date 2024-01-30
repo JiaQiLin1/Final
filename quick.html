@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>quick</title>
+    <link rel="stylesheet" href="css/quick.css">
+</head>
+<body>
+    <nav>
+        <div class="logo-container">
+            <a href="main.html">
+                <p>Zashed</p>
+            </a>
+        </div>
+        <div class="button-container">
+            <button id="toggleButton" onclick="toggleWhiteboard()">&#8592;  &#8594;</button>
+            <button id="clearBoardButton" onclick="clearBoard()">Clear Board</button>
+        </div>
+    </nav>
+
+    <div class="wrapper">
+        <div id="question"></div>
+        <input id="ans" class="input-field"></input>
+        <h4 id="RW"></h4>
+        <button id="submit" onclick="calculate()" class="submit">Calculate!</button>
+        <div id="result"></div>
+        <div id="score">Score: 0/10</div>
+        <div id="timeElapsed">Time Elapsed: 0 seconds</div>
+        <p id ="ansed"></p>
+        <button id="next" onclick="generateQuestion()" hidden class="next">Next Question</button>
+    </div>
+
+    <canvas id="whiteboard" width="800" height="600"></canvas>
+    
+
+    <script>
+        let q = [
+            [`sin(&#960;/2)`, 1, "The sine of &#960;/2 is 1 because, in the unit circle, at that angle, the y-coordinate of the point where the terminal side intersects the unit circle is 1."],
+            [`sin(&#960;/6)`, 0.5, "The sine of &#960;/6 is 0.5 because, in the unit circle, at that angle, the y-coordinate of the point where the terminal side intersects the unit circle is equal to half of the radius, which is 0.5."],
+            [`cos(&#960;/2)`, 0, "The cosine of &#960;/2 is 0 because, in the unit circle, at that angle, the x-coordinate of the point where the terminal side intersects the unit circle is 0."],
+            [`cos(&#960;)`, -1, "The cosine of &#960; (pi) is -1 because, in the unit circle, at the angle of π, the x-coordinate of the point where the terminal side intersects the unit circle is -1."],
+            ['sin(&#960;)', 0, "The sine of π (pi) is 0 because, in the unit circle, at the angle of π, the y-coordinate of the point where the terminal side intersects the unit circle is 0."],
+            ['log<sub>2</sub>4', 2, "The logarithm of 4 with a base of 2, denoted as log₂(4), is equal to 2. This is because 2 raised to the power of 2 (2²) equals 4. Therefore, log₂(4) = 2."],
+            ['log<sub>3</sub>1/9', -2, "The logarithm of 1/9 with a base of 3, denoted as log₃(1/9), is equal to -2. This is because 3 raised to the power of -2 (3^(-2)) equals 1/9. Therefore, log₃(1/9) = -2."],
+            ['log<sub>9</sub>3', 1/2, "The logarithm of 3 with a base of 9, log₉(3), is 1/2 because 9 raised to the power of 1/2 equals 3."],
+            ['log<sub>6</sub>1296', 4, "The logarithm of 1296 with a base of 6, denoted as log₆(1296), is equal to 4 because 6 raised to the power of 4 (6⁴) equals 1296."],
+            ['What are the asymptote of (x-1)/(x+2)', -2, "x + 2 = 0 | x = -2"],
+            ['What are the asymptote of (x-1)/(x+3)', -3, "x + 2 = 0 | x = -3"],
+            ['What are the asymptote of (x-1)/(x-2)', 2, "x - 2 = 0 | x = 2"],
+            ['What are the asymptote of (x-1)/(x-3)', 3, "x - 3 = 0 | x = 3"],
+            ['What are the zero of (x-1)/(x+3)', 1, "x - 1 = 0 | x = 1"],
+            ['What are the zero of (x+2)/(x+3)', -2, "x + 2 = 0 | x = -2"],
+            ['What are the zero of (x+3)/(x+4)', -3, "x + 3 = 0 | x = -3"],
+            ['What is the y-intercept of ((5x+4)(x-1))/(x-1)', 4, "(5x0+4)(-1)/-1 = 4"],
+            ['What is the constant finite difference for -5x^4 + 3x^3 + -2x^2 - 1?', -120, "cfd = a*n! | -5*4! = -120"],
+            ['What is the leading coefficient of -2(3x-2)^2(1-5x)^3(x^2+9)', 2250, "-5^3 * 1^2 * 3 ^2 * -2 = -2250"],
+            ['What is the degree of -2(3x-2)^2(1-5x)^3(x^2+9)', 7, "2+3+2 = 7"]
+        ];
+
+
+        let ran;
+        let score = 0;
+        let attempts = 0;
+        let startTime;
+        let endTime;
+        let isHid = document.getElementById('next');//hide
+        let isHid2 = document.getElementById('ans');
+        let isHid3 = document.getElementById('submit');
+
+        document.addEventListener("DOMContentLoaded", function () {
+            generateQuestion();
+            startTime = new Date();
+            updateElapsedTime();
+        });
+
+        function calculate() {
+            let userInput = parseFloat(document.getElementById("ans").value);
+
+            if (isNaN(userInput)) {
+                alert('Please enter a valid number');
+                document.getElementById('ans').value = '';
+            } 
+            else if (userInput === q[ran][1]) {//check 2 part of array
+                document.getElementById('RW').innerHTML = "Correct";
+                document.getElementById('RW').style.color = "green";
+                score++;
+                attempts++;
+                document.getElementById('score').innerHTML = `Score: ${score}/10`;
+                document.getElementById("ansed").innerHTML = q[ran][2];//put 3 part of array
+                isHid.removeAttribute('hidden');
+                isHid2.setAttribute("hidden", "hidden");
+                isHid3.setAttribute("hidden", "hidden");
+            } 
+            else {
+                document.getElementById('RW').innerHTML = "Wrong";
+                document.getElementById('RW').style.color = "red";
+                document.getElementById('score').innerHTML = `Score: ${score}/10`;
+                attempts++;
+                document.getElementById("ansed").innerHTML = q[ran][2];//put 3 part of array
+                isHid.removeAttribute('hidden');
+                isHid2.setAttribute("hidden", "hidden");
+                isHid3.setAttribute("hidden", "hidden");
+            }
+
+            if (attempts === 10) {//done?
+                endTime = new Date();
+                let timeTaken = (endTime - startTime) / 1000;
+
+                alert(`Quiz completed! You got ${score} out of 10 correct. Time taken: ${timeTaken} seconds.`);
+                document.getElementById('score').innerHTML = `Score: ${score}`;
+                saveToLocalStorage(score, timeTaken);
+                window.location.href = 'main.html';//kick
+            }
+        }
+
+        function generateQuestion() {
+            ran = Math.floor(Math.random() * 20);
+            let item = q[ran];//first part of array
+            document.getElementById("question").innerHTML = `${item[0]}?`;
+            document.getElementById("ans").value = '';
+            document.getElementById("ansed").innerHTML = '';
+            document.getElementById('RW').innerHTML ='';
+            isHid.setAttribute("hidden", "hidden");
+            isHid2.removeAttribute("hidden");
+            isHid3.removeAttribute("hidden");
+        }
+
+        function saveToLocalStorage(score, timeTaken) {
+            let quizResults = JSON.parse(localStorage.getItem('quizResults')) || [];
+            quizResults.push({ score: score, timeTaken: timeTaken });
+            localStorage.setItem('quizResults', JSON.stringify(quizResults));
+        }
+
+        function updateElapsedTime() {
+            setInterval(function () {
+                if (startTime) {
+                    let currentTime = new Date();
+                    let elapsedSeconds = Math.floor((currentTime - startTime) / 1000);
+                    document.getElementById('timeElapsed').innerHTML = `Time: ${elapsedSeconds} seconds`;
+                }
+            }, 1000);
+        }
+
+    </script>
+    <script>
+        //create a whiteboard
+        const canvas = document.getElementById('whiteboard');
+        const ctx = canvas.getContext('2d');
+
+        let drawing = false;
+
+        function startPosition(e) {//start?
+            drawing = true;
+            draw(e);
+        }
+
+        function endPosition() {//done?
+            drawing = false;
+            ctx.beginPath();
+        }
+        //mouse clicked?
+        function draw(e) {
+            if (!drawing) return;
+            //set size and color
+            ctx.lineWidth = 5;  
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000';
+            //if clicked
+            ctx.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        }
+
+        canvas.addEventListener('mousedown', startPosition);//where mouse
+        canvas.addEventListener('mouseup', endPosition);//where mouse
+        canvas.addEventListener('mousemove', draw);//where mouse
+        
+
+        //animations
+        function toggleWhiteboard() {
+            const wrapper = document.querySelector('.wrapper');
+            const whiteboard = document.getElementById('whiteboard');
+
+            if (wrapper.style.marginLeft === '0px') {//moves left
+                wrapper.style.marginLeft = 'calc(100% + 1000px)';
+                whiteboard.style.left = '350px'; 
+                whiteboard.style.display = 'block';
+            } 
+            else {
+                wrapper.style.marginLeft = '0px';//pop
+                whiteboard.style.left = 'calc(100% - 100px)';
+                whiteboard.style.display = 'none';
+            }
+        }
+        //remove ink
+        function clearBoard() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    </script>   
+</body>
+</html>

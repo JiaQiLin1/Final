@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/choices.css">
+    <title>Choices</title>
+</head>
+<body>
+
+    <nav>
+        <a href="main.html">
+            <p>Zashed</p>
+        </a>
+    </nav>
+
+    <section>
+        <button class="left-button main-button" onclick="quick()">Quick Questions</button>
+        <button class="right-button main-button" onclick="word()">Word Questions</button>
+    </section>
+
+    <script>
+        function quick(){
+            window.location.href = 'quick.html';
+        }
+        function word(){
+            window.location.href = 'word.html';
+        }
+    </script>
+</body>
+</html>

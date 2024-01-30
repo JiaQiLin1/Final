@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--space each one for more symmetry-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'><!--For the user icon and lock icon-->
+    <link rel="stylesheet" href="css/logsign.css">
+    <title>Login and Registration</title>
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="nav">
+            <div class="nav-logo">
+                <a href="main.html">
+                    <p>Zashed</p>
+                </a>
+            </div>
+        </nav>
+        <div class="form-box">
+            <div class="login-container" id="login">
+                <div class="top">
+                    <span>Don't have an account? <a href="#" onclick="register()">Sign Up</a></span>
+                    <header>Sign In</header>
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" id="UserLog" placeholder="Username">
+                    <i class="bx bx-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" id="PassLog" placeholder="Password">
+                    <i class="bx bx-lock-alt"></i>
+                </div>
+                <div class="input-box">
+                    <button type="button" class="submit" id="submitLog" onclick="LogIn()">Sign In</button>
+                </div>
+            </div>
+            <div class="register-container" id="register">
+                <div class="top">
+                    <span>Have an account? <a href="#" onclick="login()">Login</a></span>
+                    <header>Sign Up</header>
+                </div>
+                <div class="two-forms">
+                </div>
+                <div class="input-box">
+                    <input type="text" class="input-field" id="UserSign" placeholder="Username">
+                    <i class="bx bx-user"></i>
+                </div>
+                <div class="input-box">
+                    <input type="password" class="input-field" id="PassSign" placeholder="Password">
+                    <i class="bx bx-lock-alt"></i>
+                    <input type="password" class="input-field" id="PassReSign" placeholder="Re-enter password">
+                    <i class="bx bx-lock-alt"></i>
+                </div>
+                <div class="input-box">
+                    <button type="button" class="submit" id="submitReg"onclick="registerUser()">Register</button>
+                </div>
+            </div>
+        </div>
+    </div>  
+
+
+    <script>
+        var a = document.getElementById("loginBtn");
+        var b = document.getElementById("registerBtn");
+        var x = document.getElementById("login");
+        var y = document.getElementById("register");
+
+        //when press, moves everything to the right 
+        function login() {
+            x.style.left = "4px";
+            y.style.right = "-520px";
+            a.className += " white-btn";
+            b.className = "btn";
+            x.style.opacity = 1;
+            y.style.opacity = 0;
+        }
+
+        //when press, moves everthing to the left and makes everything not visable
+        function register() {
+            x.style.left = "-520px";
+            y.style.right = "5px";
+            a.className = "btn";
+            b.className += " white-btn";
+            x.style.opacity = 0;
+            y.style.opacity = 1;
+        }
+
+    </script>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
